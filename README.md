@@ -1,2 +1,6 @@
 # PI_snakeproject
-wip
+
+## Twórcy projektu
+- Justyna Sielska
+- Marta Lipień
+- Aleksandra Woźniak
