@@ -6,11 +6,11 @@ Tablica miro, gdzie jest rozpiska do wrzucania pomyslow
 ## Justyna Sielska
 - Poprawki w kodzie
 - Mechanika artefaktów
-- Mechanika Game Over i stany gry
+- Podstawowa mechanika Game Over (wylaczanie gry) i nazwanie stanów gry
 ## Marta Lipień
 - Podstawowe ciało gry
--  Czuwanie nad fabułą i assetami gry
+- Czuwanie nad fabułą i assetami gry
 ## Aleksandra Woźniak
 - Obsluga błędów
 - Udźwiękowienie programu
-- Praca nad Leaderboardem
+- Praca nad Leaderboardem - wyniki, zapis, szyfrowanie
