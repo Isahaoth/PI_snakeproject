@@ -56,7 +56,8 @@ int main()
         while(SDL_PollEvent(&e)) {
             if(e.type == SDL_QUIT) { running = false; }
             if(e.type == SDL_KEYDOWN) {
-                if(e.key.keysym.sym == SDLK_DOWN) { dir = DOWN; }
+                if (e.key.keysym.sym == SDLK_ESCAPE) { running = false; }
+                else if(e.key.keysym.sym == SDLK_DOWN) { dir = DOWN; }
                 else if(e.key.keysym.sym == SDLK_UP) { dir = UP; }
                 else if(e.key.keysym.sym == SDLK_RIGHT) { dir = RIGHT; }
                 else if(e.key.keysym.sym == SDLK_LEFT) { dir = LEFT; }
@@ -89,4 +90,5 @@ int main()
     
     return 0;
 }
+
 
