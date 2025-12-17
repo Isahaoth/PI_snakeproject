@@ -1,30 +1,30 @@
-#define SDL_MAIN_HANDLED
+#define SDL_MAIN_HANDLED //ten define pozwala nam wywolywac normalna petlÄ™ main, bez tego wywala blÄ™dy i ogolnie 
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL.h> //biblioteka graficzna
 #include <iostream>
 #include <string>
 #include <vector>
-#include <deque>
+#include <deque> //podobne do listy, ale pozwala na wkladanie i usuwanie danych z obu koncow, so far uzywam tego - Alex
 
 using namespace std;
 
-// --- STA£E GRY ---
+//STALE GRY
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
-const int TILE_SIZE = 20; // Rozmiar ka¿dego segmentu wê¿a
+const int TILE_SIZE = 20; // Rozmiar kazdego "kawalka" segmentu weza
 
-// --- DEKLARACJE GLOBALNE ---
+//DEKLARACJE GLOBALNE 
 SDL_Window* gWindow = nullptr;
 SDL_Renderer* gRenderer = nullptr;
 
-// Struktura reprezentuj¹ca pozycjê segmentu wê¿a
+// Struktura reprezentujaca pozycje segmentu weza  - UWAGA: warto objasnic w sprawozdaniu czym sa structy
 struct Segment {
     int x;
     int y;
 };
 
-deque<Segment> snake;
-int snake_length = 5; // Pocz¹tkowa d³ugoœæ wê¿a
+deque<Segment> snake; // to jest lista zawierajaca wspolrzedne kazdego kawalka weza
+int snake_length = 5; // Poczatkowa dlugosc snake'a
 
 // Kierunki
 enum Direction
@@ -38,46 +38,47 @@ enum Direction
 
 Direction current_dir = NONE; // Aktualny kierunek ruchu
 
-// --- FUNKCJE STARTOWE I KOÑCZ¥CE ---
+//FUNKCJE STARTOWE I KONCZACE
 
-bool init()
+//boolowska funkcja inicjalizacyjna
+bool init() 
 {
     // 1. Inicjalizacja SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        cerr << "SDL nie móg³ zostaæ zainicjalizowany! SDL_Error: " << SDL_GetError() << endl;
+        cerr << "SDL nie mÃ³gl zostaÃ¦ zainicjalizowany! SDL_Error: " << SDL_GetError() << endl; //cerr wywala bledy na konsole bledow a nie jak cout
         return false;
     }
 
     // 2. Tworzenie okna
     gWindow = SDL_CreateWindow(
-        "Snake Game Prototype",
+        "Snake Game Prototype", //tutaj nazwa okienka 
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
-        SCREEN_WIDTH,
+        SCREEN_WIDTH, //wymiary
         SCREEN_HEIGHT,
         SDL_WINDOW_SHOWN
     );
     if (gWindow == nullptr)
     {
-        cerr << "Okno nie mog³o zostaæ utworzone! SDL_Error: " << SDL_GetError() << endl;
+        cerr << "Okno nie moglo zostac utworzone! SDL_Error: " << SDL_GetError() << endl;
         return false;
     }
 
     // 3. Tworzenie Renderer
-    // Zmieniono flagê z SDL_RENDERER_PRESENTVSYNC na 0, aby nie wymuszaæ VSync
+    // Zmieniono flage z SDL_RENDERER_PRESENTVSYNC na 0, aby nie wymuszac VSync
     gRenderer = SDL_CreateRenderer(
-        gWindow,
-        -1,
-        SDL_RENDERER_ACCELERATED
+        gWindow, //gdzie rysuje
+        -1, //jaki sterownik
+        SDL_RENDERER_ACCELERATED //uzywaj karty graficznej
     );
     if (gRenderer == nullptr)
     {
-        cerr << "Renderer nie móg³ zostaæ utworzony! SDL_Error: " << SDL_GetError() << endl;
+        cerr << "Renderer nie mÃ³gl zostac utworzony! SDL_Error: " << SDL_GetError() << endl;
         return false;
     }
 
-    // Ustawienie pocz¹tkowej pozycji wê¿a
+    // Ustawienie poczatkowej pozycji weza (srodek ekranu)
     snake.push_front({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 });
 
     return true;
@@ -85,7 +86,7 @@ bool init()
 
 void close()
 {
-    // 1. Zwalnianie Renderer
+    // 1. Zwalnianie Renderera
     if (gRenderer != nullptr)
     {
         SDL_DestroyRenderer(gRenderer);
@@ -99,17 +100,17 @@ void close()
         gWindow = nullptr;
     }
 
-    // 3. Zamykanie podsystemów SDL
+    // 3. Zamykanie podsystemÃ³w SDL
     SDL_Quit();
 }
 
-// --- LOGIKA GRY ---
+//LOGIKA GRY
 
 void update_game()
 {
     if (current_dir == NONE) return;
 
-    // 1. Obliczenie nowej pozycji g³owy
+    // Obliczenie nowej pozycji glowy
     Segment new_head = snake.front();
 
     switch (current_dir)
@@ -121,45 +122,45 @@ void update_game()
     default: break;
     }
 
-    // 2. Dodanie nowej g³owy na przód
+    // Dodanie nowej glowy na przÃ³d
     snake.push_front(new_head);
 
-    // 3. Utrzymanie d³ugoœci (usuwamy ogon, jeœli w¹¿ jest za d³ugi)
+    //Utrzymanie dlugosci (usuwamy ogon, jezeli waz jest za dlugi)
     while (snake.size() > snake_length)
     {
         snake.pop_back();
     }
 
-    SDL_Delay(30);
+    SDL_Delay(30); //spowolnienie snake'a - upewnia sie ze w przypadku szybszego komputera nie zwieje z ekranu
 }
 
 void render_game()
 {
-    // 1. Czyszczenie ekranu (czarny kolor t³a)
+    // 1. Czyszczenie ekranu (zielony (obecnie?) kolor tla)
     SDL_SetRenderDrawColor(gRenderer, 106, 153, 78, 255);
     SDL_RenderClear(gRenderer);
 
-    // 2. Ustawienie koloru wê¿a (np. zielony)
+    // 2. Ustawienie koloru weza
     SDL_SetRenderDrawColor(gRenderer, 167, 201, 87, 0);
 
-    // 3. Rysowanie ka¿dego segmentu
+    // 3. Rysowanie kazdego segmentu
     for (const auto& segment : snake)
     {
         SDL_Rect segment_rect = { segment.x, segment.y, TILE_SIZE, TILE_SIZE };
         SDL_RenderFillRect(gRenderer, &segment_rect);
     }
 
-    // 4. Prezentacja (wyœwietlenie narysowanej klatki)
+    // 4. Prezentacja (wyswietlenie narysowanej klatki)
     SDL_RenderPresent(gRenderer);
 }
 
 
 int main()
 {
-    // Sprawdzenie, czy inicjalizacja siê powiod³a
+    // Sprawdzenie, czy inicjalizacja sie powiodla
     if (!init())
     {
-        cerr << "Program nie móg³ wystartowaæ. Wychodzenie." << endl;
+        cerr << "Program nie mÃ³gl wystartowac. Wychodzenie." << endl;
         close();
         return 1;
     }
@@ -167,10 +168,10 @@ int main()
     SDL_Event e;
     bool quit = false;
 
-    // --- PÊTLA GRY (Game Loop) ---
+    //petla gry
     while (!quit)
     {
-        // 1. PRZETWARZANIE WEJŒCIA (Obs³uga zdarzeñ)
+        // OBSLUGA ZDARZEN
         while (SDL_PollEvent(&e))
         {
             if (e.type == SDL_QUIT)
@@ -182,7 +183,7 @@ int main()
             {
                 switch (e.key.keysym.sym)
                 {
-                    // Zmiana kierunku (zabezpieczenie przed cofaniem siê w miejscu)
+                    // Zmiana kierunku (zabezpieczenie przed cofaniem sie w miejscu)
                 case SDLK_DOWN: if (current_dir != UP) current_dir = DOWN; break;
                 case SDLK_UP: if (current_dir != DOWN) current_dir = UP; break;
                 case SDLK_LEFT: if (current_dir != RIGHT) current_dir = LEFT; break;
@@ -199,7 +200,8 @@ int main()
 
     }
 
-    // Zwolnienie zasobów i wyjœcie
+    // Zwolnienie zasobÃ³w i wyjscie
     close();
     return 0;
+
 }
