@@ -14,3 +14,4 @@ Tablica miro, gdzie jest rozpiska do wrzucania pomyslow
 - Obsluga błędów
 - Udźwiękowienie programu
 - Praca nad Leaderboardem - wyniki, zapis, szyfrowanie
+- Stworzenie ekranu Game Over z podanymi wynikami
