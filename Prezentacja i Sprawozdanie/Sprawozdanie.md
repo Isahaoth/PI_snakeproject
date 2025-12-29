@@ -1,11 +1,11 @@
-Imię i nazwisko
+Imię i nazwisko:
 Justyna Sielska
 Aleksandra Woźniak
-Marta Lipień	Kierunek
-Inżynieria Obliczeniowa	Rok studiów i grupa
+Marta Lipień	Kierunek:
+Inżynieria Obliczeniowa	Rok studiów i grupa:
 I rok, Grupa 2
-Data zajęć
-15.01.2026r.	Numer i temat sprawozdania
+Data zajęć:
+15.01.2026r.	Numer i temat sprawozdania:
 12. Projekt – Indiana Snake
 
 1.Cel i opis projektu
