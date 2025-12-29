@@ -17,17 +17,13 @@ Opis gry i mechaniki:  W naszej grze nie sterujesz zwykłym wężem, ale poszuki
 Zastasowanie technik programistycznych: Do stworzenia ciała węża użyliśmy kolejki std::deque, ponieważ pozwala ona bardzo łatwo dodawać nową głowę i usuwać stary ogon przy każdym ruchu. Logika gry opiera się na przełączniku trybów, dzięki któremu program w odpowiednim momencie decyduje, czy ma pokazywać aktywną rozgrywkę, czy zatrzymać wszystko i wyświetlić ekran z napisem o przegranej. Zadbaliśmy też o porządek w pamięci komputera – stworzyliśmy funkcję clean(), która usuwa stare napisy, żeby program nie zwalniał. Kolizje ze skarbami sprawdza gotowa funkcja SDL_HasIntersection, która wykrywa moment, w którym dwa obiekty na siebie nachodzą.
 Wykorzystane biblioteki:   Główną biblioteką jest SDL2, która odpowiada za okno gry i sterowanie. Do wyświetlania tekstów użyliśmy dodatku SDL2_ttf. Korzystaliśmy też ze standardowych narzędzi C++, takich jak vector do trzymania listy skarbów oraz string do tworzenia napisów z wynikami.
 
-
-2.  Kod:
-
+2. Kod:
 
 
 
 
 
-
-
-3.  Wnioski:
+3.Wnioski:
 Praca nad projektem pokazała nam, że najważniejsza jest poprawna konfiguracja bibliotek oraz pilnowanie, aby wszystkie pliki, takie jak czcionki czy pliki DLL, znajdowały się w folderze z grą. Nauczyliśmy się pisać kod tak, aby był odporny na błędy braku danych, co zapobiegło nagłemu wyłączaniu się programu. Zrozumieliśmy też, jak ważne jest zwalnianie pamięci po nieużywanych obrazkach i tekstach, żeby gra działała płynnie. Okazało się, że nawet prosta gra staje się dużo fajniejsza, jeśli nada się jej ciekawy motyw graficzny i spójną kolorystykę.
 
 
