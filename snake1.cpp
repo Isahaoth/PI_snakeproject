@@ -1,6 +1,6 @@
 #define SDL_MAIN_HANDLED // pozwala na uzywanie zwyklej funkcji main
 #include <SDL2/SDL.h> //wieksze szanse ze program zadziala
-#include <SDL2/SDL_mixer.h>
+//#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <vector>
@@ -39,7 +39,7 @@ TextElement createText(SDL_Renderer* renderer, TTF_Font* font, string message, S
     SDL_Surface* surf = TTF_RenderText_Blended(font, message.c_str(), color);
     temp.texture = SDL_CreateTextureFromSurface(renderer, surf);
 
-    
+
     temp.rect.y = y;
     temp.rect.w = surf->w;
     temp.rect.h = surf->h;
@@ -47,6 +47,18 @@ TextElement createText(SDL_Renderer* renderer, TTF_Font* font, string message, S
 
     SDL_FreeSurface(surf);
 
+    return temp;
+}
+
+// licznik punktów w rogu 
+TextElement createHUDText(SDL_Renderer* renderer, TTF_Font* font, string message, SDL_Color color, int x, int y) {
+    TextElement temp;
+    if (!font) return temp;
+    SDL_Surface* surf = TTF_RenderText_Blended(font, message.c_str(), color);
+    if (!surf) return temp;
+    temp.texture = SDL_CreateTextureFromSurface(renderer, surf);
+    temp.rect = { x, y, surf->w, surf->h };
+    SDL_FreeSurface(surf);
     return temp;
 }
 
@@ -68,7 +80,8 @@ enum GameState //stany gry
 
 void artefakty(vector<SDL_Rect>& artifacts)
 {
-    for (int i = 0;i < ART_NUM;i++)
+    artifacts.clear(); //  Czyszczenie przy restarcie gry
+    for (int i = 0; i < ART_NUM; i++)
     {
         artifacts.push_back({
             rand() % (WINDOW_WIDTH - 20),  // Losowy X w granicach okna
@@ -78,7 +91,7 @@ void artefakty(vector<SDL_Rect>& artifacts)
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
     srand(time(NULL)); //ziarno losowosci
     // Inicjalizacja z obsługa błędu
@@ -112,9 +125,13 @@ int main()
         return 1;
     }
 
-    TTF_Font* main_font = TTF_OpenFont("blocky.ttf", 60);
-    TTF_Font* main_font2 = TTF_OpenFont("blocky.ttf", 30);
+    // czcionka 
+    const char* fontPath = "C:\\Gry\\blocky.ttf"; // (Justyna - musiałam folder sobie utworzyc bo mi nie działało inaczej, wiec trzeba bedzie to zmienic) 
+    TTF_Font* main_font = TTF_OpenFont(fontPath, 70);
+    TTF_Font* main_font2 = TTF_OpenFont(fontPath, 30);
+    TTF_Font* hud_font = TTF_OpenFont(fontPath, 30); // czcionka licznika
     SDL_Color MenuGameOver_Color = { 194, 197, 170, 255 }; //kolor gameovera
+    SDL_Color HUD_Color = { 255, 255, 255, 255 }; //  kolor licznika podczas gry
 
     SDL_Event e;
     bool running = true;
@@ -122,10 +139,11 @@ int main()
     deque<SDL_Rect> rq; //cialo weza
     int snake_size = 3; //rozmiar snake'a
     vector<SDL_Rect> artifacts;
-    SDL_Rect head{ WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 20, 20 }; 
+    SDL_Rect head{ WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 20, 20 };
     score = 0;
 
     TextElement GOtxt = createText(renderer, main_font, "GAME OVER", MenuGameOver_Color, WINDOW_HEIGHT / 4);
+    TextElement ScoreHUD; //  Element licznika punktow na zywo
 
     GameState current_state = PLAYING;
 
@@ -136,13 +154,23 @@ int main()
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) { running = false; }
             if (e.type == SDL_KEYDOWN) {
-                if (e.key.keysym.sym == SDLK_ESCAPE) { running = false; } //dodano linijke zamykajaca program po wcisnieciu escape
-                if (current_state == PLAYING) 
+                if (e.key.keysym.sym == SDLK_ESCAPE) { running = false; } //zamykanie programu po wcisnieciu escape
+                if (current_state == PLAYING)
                 {
-                    if (e.key.keysym.sym == SDLK_DOWN) { dir = DOWN; }
-                    else if (e.key.keysym.sym == SDLK_UP) { dir = UP; }
-                    else if (e.key.keysym.sym == SDLK_RIGHT) { dir = RIGHT; }
-                    else if (e.key.keysym.sym == SDLK_LEFT) { dir = LEFT; }
+                    //  Blokada zawracania o 180 stopni
+                    if (e.key.keysym.sym == SDLK_DOWN && dir != UP) { dir = DOWN; }
+                    else if (e.key.keysym.sym == SDLK_UP && dir != DOWN) { dir = UP; }
+                    else if (e.key.keysym.sym == SDLK_RIGHT && dir != LEFT) { dir = RIGHT; }
+                    else if (e.key.keysym.sym == SDLK_LEFT && dir != RIGHT) { dir = LEFT; }
+                }
+                //  Restart gry po nacisnieciu SPACJI
+                if (current_state == GAMEOVER && e.key.keysym.sym == SDLK_SPACE) {
+                    current_state = PLAYING;
+                    score = 0; snake_size = 3; rq.clear();
+                    head = { WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 20, 20 };
+                    dir = RIGHT;
+                    artefakty(artifacts);
+                    ScoreHUD.clean();
                 }
 
             }
@@ -186,7 +214,7 @@ int main()
             //dodanie najnowszej glowy na front
             rq.push_front(head);
 
-            while (rq.size() > snake_size)
+            while (rq.size() > (size_t)snake_size)
             {
                 rq.pop_back();
             }
@@ -208,30 +236,39 @@ int main()
             for_each(artifacts.begin(), artifacts.end(), [&](auto& artif) {
                 SDL_RenderFillRect(renderer, &artif);
                 });
-       
+
+            //  Odswiezanie licznika punktow w rogu podczas gry
+            ScoreHUD.clean();
+            ScoreHUD = createHUDText(renderer, hud_font, "Wynik: " + to_string(score), HUD_Color, 20, 20);
+            SDL_RenderCopy(renderer, ScoreHUD.texture, NULL, &ScoreHUD.rect);
+
         }
         else if (current_state == GAMEOVER)
         {
-            string yourscore = "Twoj wynik to " + to_string(score) + ". ";
+            string yourscore = "Twoj wynik to " + to_string(score) + ". (SPACJA - Restart)";
             TextElement ScoreTxt = createText(renderer, main_font2, yourscore, MenuGameOver_Color, 300);
             SDL_SetRenderDrawColor(renderer, 65, 72, 51, 255);
             SDL_RenderClear(renderer);
 
             SDL_RenderCopy(renderer, GOtxt.texture, NULL, &GOtxt.rect);
             SDL_RenderCopy(renderer, ScoreTxt.texture, NULL, &ScoreTxt.rect);
-            
+
+            ScoreTxt.clean(); // usuwa stary napis, aby nie zapychac pamieci
         }
         SDL_RenderPresent(renderer);
-        SDL_Delay(30);
+        SDL_Delay(50);
     }
 
     // Zamykanie programu
+    ScoreHUD.clean(); // restartowanie licznika
+    GOtxt.clean(); // zwalnianie miejsca
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-   
+
     TTF_CloseFont(main_font);
     TTF_CloseFont(main_font2);
+    TTF_CloseFont(hud_font);
     TTF_Quit();
 
     return 0;
