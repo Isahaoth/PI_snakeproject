@@ -6,7 +6,9 @@ Tablica miro, gdzie jest rozpiska do wrzucania pomyslow
 ## Justyna Sielska
 - Poprawki w kodzie
 - Mechanika artefaktów
-- Podstawowa mechanika Game Over (wylaczanie gry) i nazwanie stanów gry
+- Podstawowa mechanika Game Over (wylaczanie gry oraz restart spacja) i nazwanie stanów gry
+- Wyswietlanie wyniku w trakcie gry
+- Brak Game Over przy cofaniu
 ## Marta Lipień
 - Podstawowe ciało gry
 - Czuwanie nad fabułą i assetami gry
