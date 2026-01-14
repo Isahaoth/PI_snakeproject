@@ -187,6 +187,10 @@ int main()
     SDL_Color Menu_Color2 = { 58, 68, 68, 255 };
     SDL_Color Menu_Color3 = { 97, 124, 115, 255 };
     SDL_Color HUD_Color = { 255, 255, 255, 255 }; //  kolor licznika podczas gry
+    SDL_Color Snake_Color= {101, 67, 33, 255}; //ciemny braz
+
+
+
 
     SDL_Event e;
     bool running = true;
@@ -457,11 +461,17 @@ int main()
             SDL_RenderClear(renderer);
 
             // Wyrysowanie ciala snake'a
-            SDL_SetRenderDrawColor(renderer, 62, 79, 73, 255); // oraz snake'a
-            for_each(rq.begin(), rq.end(), [&](auto& snake_segment)
-                {
+            SDL_SetRenderDrawColor(renderer, Snake_Color.r, Snake_Color.g, Snake_Color.b, Snake_Color.a); // oraz snake'a
+            bool isHead = true;
+                for(auto& snake_segment: rq){
+                    if(isHead){
+                        SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+                        isHead = false;}
+                    else {
+                        SDL_SetRenderDrawColor(renderer, 101, 67, 33, 255);
+                    }
                     SDL_RenderFillRect(renderer, &snake_segment);
-                });
+                }
 
             // Artefakty - wyrysowanie
             SDL_SetRenderDrawColor(renderer, 211, 175, 55, 0);
@@ -600,4 +610,5 @@ int main()
 
     return 0;
 }
+
 
