@@ -14,5 +14,5 @@
 ## Aleksandra Woźniak
 - Obsluga błędów
 - Udźwiękowienie programu
-- Praca nad Leaderboardem - wyniki, zapis, szyfrowanie
+- Praca nad Leaderboardem - wyniki, zapis
 - Stworzenie ekranu Game Over z podanymi wynikami
