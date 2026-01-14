@@ -1,6 +1,5 @@
 # INDIANA SNAKE: snake, który gromadzi artefakty poukrywane w roznorakich kryptach
-Wazne linki dla was: https://miro.com/app/board/uXjVJgBB3rM=/
-Tablica miro, gdzie jest rozpiska do wrzucania pomyslow
+
 
 # Twórcy projektu
 ## Justyna Sielska
