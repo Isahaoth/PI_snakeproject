@@ -84,8 +84,41 @@ enum GameState //stany gry
     LEADERBOARD,
     PLAYING,
     GAMEOVER,
-    SAVESCORE
+    SAVESCORE,
+    CUSTOMIZE
 };
+
+//Paleta kolorow dla snake'a
+vector<SDL_Color> colors = {
+{101,67,33,255}, //Brązowy
+{34,139,34,255}, //Zielony
+{0,0,255,255}, //Niebieski
+{255,0,0,255}, //Czerwony
+{255,215,0,255}, //Złoty
+{204, 213, 174, 255}, // CCD5AE
+{233, 237, 201, 255}, // E9EDC9
+{254, 250, 224, 255}, // FEFAE0
+{250, 237, 205, 255}, // FAEDCD
+{212, 163, 115, 255},  // D4A373
+{237, 237, 233, 255}, // EDEDE9
+{214, 204, 194, 255}, // D6CCC2
+{245, 235, 224, 255}, // F5EBE0
+{227, 213, 202, 255}, // E3D5CA
+{213, 189, 175, 255}, // D5BDAF
+{240, 128, 128, 255}, // F08080
+{244, 151, 142, 255}, // F4978E
+{248, 173, 157, 255}, // F8AD9D
+{251, 196, 171, 255}, // FBC4AB
+{255, 218, 185, 255},  // FFDAB9
+{81, 45, 56, 255},  // 512D38
+{178, 112, 146, 255}, // B27092
+{244, 191, 219, 255}, // F4BFDB
+{255, 233, 243, 255}, // FFE9F3
+{135, 186, 171, 255}  // 87BAAB
+};
+int headColorIdx = 0;
+int bodyColorIdx = 0;
+int customSubMenuIdx =0;
 
 int textRand = (rand() % 5);
 
@@ -208,7 +241,8 @@ int main()
     TextElement GameName2 = createHUDText(renderer, main_font3, "INDIANA SNAKE", Menu_Color3, WINDOW_WIDTH / 8 - 10, WINDOW_HEIGHT / 4-5);
     TextElement Option1 = createText(renderer, main_font2, "Tryb Klasyczny", Menu_Color, WINDOW_HEIGHT / 4 + 250);
     TextElement Option2 = createText(renderer, main_font2, "Leaderboard", Menu_Color, WINDOW_HEIGHT / 4 + 375);
-    TextElement Option3 = createText(renderer, main_font2, "Wyjscie", Menu_Color, WINDOW_HEIGHT / 4 + 500);
+    TextElement OptionCustom = createText(renderer, main_font2, "Customuj snake'a", Menu_Color, WINDOW_HEIGHT/ 4 +500);
+    TextElement Option3 = createText(renderer, main_font2, "Wyjscie", Menu_Color, WINDOW_HEIGHT / 4 + 625);
     TextElement GO_Option1 = createText(renderer, main_font2, "Rozpocznij od nowa", Menu_Color, WINDOW_HEIGHT / 4 + 325);
     TextElement GO_Option2 = createText(renderer, main_font2, "Zapisz swoj wynik", Menu_Color, WINDOW_HEIGHT / 4 + 425);
     TextElement GO_Option3 = createText(renderer, main_font2, "Powroc do menu", Menu_Color, WINDOW_HEIGHT / 4 + 525);
@@ -219,7 +253,8 @@ int main()
     //HIGHLIGHTED TEXT
     TextElement Option1H = createText(renderer, main_font2, "Tryb Klasyczny", HUD_Color, WINDOW_HEIGHT / 4 + 250);
     TextElement Option2H = createText(renderer, main_font2, "Leaderboard",HUD_Color, WINDOW_HEIGHT / 4 + 375);
-    TextElement Option3H = createText(renderer, main_font2, "Wyjscie", HUD_Color, WINDOW_HEIGHT / 4 + 500);
+    TextElement OptionCustomH =createText(renderer, main_font2, "Customuj snake'a", HUD_Color, WINDOW_HEIGHT / 4+500);
+    TextElement Option3H = createText(renderer, main_font2, "Wyjscie", HUD_Color, WINDOW_HEIGHT / 4 + 625);
     TextElement GO_Option1H = createText(renderer, main_font2, "Rozpocznij od nowa", HUD_Color, WINDOW_HEIGHT / 4 + 325);
     TextElement GO_Option2H = createText(renderer, main_font2, "Zapisz swoj wynik", HUD_Color, WINDOW_HEIGHT / 4 + 425);
     TextElement GO_Option3H = createText(renderer, main_font2, "Powroc do menu", HUD_Color, WINDOW_HEIGHT / 4 + 525);
@@ -253,7 +288,7 @@ int main()
     
     //OBSLUGA MENU INTERAKTYWNYCH
     int chosenIndex = 0;
-    const int OPTIONS_NUM = 3; 
+    const int OPTIONS_NUM = 4; 
 
     int GameOverIndex = 0;
     const int GO_OPTIONS = 3;
@@ -343,6 +378,9 @@ int main()
                                     current_state = LEADERBOARD;
                                     break;
                                 case 2:
+                                current_state= CUSTOMIZE;
+                                break;
+                                case 3:
                                     running = false;
 
                             }
@@ -358,6 +396,20 @@ int main()
                     else if (e.key.keysym.sym == SDLK_LEFT && dir != RIGHT) { dir = LEFT; }
                 
                 }
+                else if (current_state == CUSTOMIZE)
+                        {
+                            if (e.key.keysym.sym == SDLK_LEFT)
+                                headColorIdx = (headColorIdx - 1 + colors.size()) % colors.size();
+                            else if (e.key.keysym.sym == SDLK_RIGHT)
+                                headColorIdx = (headColorIdx + 1) % colors.size();
+                            else if (e.key.keysym.sym == SDLK_UP)
+                                bodyColorIdx = (bodyColorIdx - 1 + colors.size()) % colors.size();
+                            else if (e.key.keysym.sym == SDLK_DOWN)
+                                bodyColorIdx = (bodyColorIdx + 1) % colors.size();
+                            else if (e.key.keysym.sym == SDLK_ESCAPE)
+                                current_state = MENU;
+                        }
+                    
                 else if (current_state == LEADERBOARD)
                 {
                     if (e.key.keysym.sym == SDLK_m)
@@ -370,13 +422,16 @@ int main()
                     {
                         GameOverIndex = (GameOverIndex - 1 + GO_OPTIONS) % GO_OPTIONS;
                     }
+
+                
+                    
                     else if (e.key.keysym.sym == SDLK_DOWN)
                     {
                         GameOverIndex = (GameOverIndex + 1) % GO_OPTIONS;
                     }
                     else if (e.key.keysym.sym == SDLK_RETURN)
                     {
-                        
+
                         switch (GameOverIndex)
                         {
                         case 0:
@@ -464,12 +519,18 @@ int main()
             SDL_SetRenderDrawColor(renderer, Snake_Color.r, Snake_Color.g, Snake_Color.b, Snake_Color.a); // oraz snake'a
             bool isHead = true;
                 for(auto& snake_segment: rq){
-                    if(isHead){
-                        SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
-                        isHead = false;}
-                    else {
-                        SDL_SetRenderDrawColor(renderer, 101, 67, 33, 255);
-                    }
+                    
+        if (isHead)
+        {
+            SDL_Color c = colors[headColorIdx];
+            SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+            isHead = false;
+        }
+    else
+    {
+    SDL_Color c = colors[bodyColorIdx];
+    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+}
                     SDL_RenderFillRect(renderer, &snake_segment);
                 }
 
@@ -537,11 +598,48 @@ int main()
                 
                 if (chosenIndex == 1) SDL_RenderCopy(renderer, Option2H.texture, NULL, &Option2H.rect);
                 else SDL_RenderCopy(renderer, Option2.texture, NULL, &Option2.rect);
+
+                if(chosenIndex == 2) SDL_RenderCopy(renderer, OptionCustomH.texture, NULL, &OptionCustomH.rect);
+                else SDL_RenderCopy (renderer, OptionCustom.texture, NULL, &OptionCustom.rect);
                     
-                if (chosenIndex == 2) SDL_RenderCopy(renderer, Option3H.texture, NULL, &Option3H.rect);
+                if (chosenIndex == 3) SDL_RenderCopy(renderer, Option3H.texture, NULL, &Option3H.rect);
                 else SDL_RenderCopy(renderer, Option3.texture, NULL, &Option3.rect);
          
         }
+
+              else if (current_state == CUSTOMIZE)
+        {
+            SDL_SetRenderDrawColor(renderer, 80, 90, 90, 225);
+            SDL_RenderClear(renderer);
+
+            TextElement headTxt = createText(renderer, main_font2, "Kolor Glowy:", HUD_Color, 50);
+            SDL_RenderCopy(renderer, headTxt.texture, NULL, &headTxt.rect);
+            headTxt.clean();
+
+            SDL_Rect headPreviewRect = { (WINDOW_WIDTH - 100) / 2, (WINDOW_HEIGHT/2)-350, 100, 100 }; // Wyśrodkowany kwadrat 100x100
+            SDL_Color currentHeadColor = colors[headColorIdx];
+
+            TextElement bodyTxt = createText(renderer, main_font2, "Kolor Ciala:", HUD_Color, 400);
+            SDL_RenderCopy(renderer, bodyTxt.texture, NULL, &bodyTxt.rect);
+            bodyTxt.clean();
+
+            // Kwadrat z kolorem ciała
+            SDL_Rect bodyPreviewRect = { (WINDOW_WIDTH - 100) / 2, (WINDOW_HEIGHT/2), 100, 100 };
+            SDL_Color currentBodyColor = colors[bodyColorIdx];
+
+            // Wypełnienie kolorem
+            SDL_SetRenderDrawColor(renderer, currentBodyColor.r, currentBodyColor.g, currentBodyColor.b, 255);
+            SDL_RenderFillRect(renderer, &bodyPreviewRect);
+
+            // Wypełnienie kolorem
+            SDL_SetRenderDrawColor(renderer, currentHeadColor.r, currentHeadColor.g, currentHeadColor.b, 255);
+            SDL_RenderFillRect(renderer, &headPreviewRect);
+
+            TextElement txt = createText(renderer, main_font2, "Aby powrocic do menu uzyj 'M'", HUD_Color, WINDOW_HEIGHT-150);
+            SDL_RenderCopy(renderer, txt.texture, NULL, &txt.rect);
+            txt.clean();
+        }
+
         else if (current_state == LEADERBOARD)
         {
             SDL_RenderClear(renderer);
@@ -610,5 +708,6 @@ int main()
 
     return 0;
 }
+
 
 
