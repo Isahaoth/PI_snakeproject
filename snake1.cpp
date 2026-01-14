@@ -178,7 +178,7 @@ int main()
 
     //OBSLUGA NAPISOW I CZCIONEK ORAZ KOLOROW
 
-    const char* fontPath = "blocky.ttf"; 
+    const char* fontPath = "assets/blocky.ttf"; 
     TTF_Font* main_font = TTF_OpenFont(fontPath, 120);
     TTF_Font* main_font2 = TTF_OpenFont(fontPath, 60);
     TTF_Font* main_font3 = TTF_OpenFont(fontPath, 120);
@@ -220,18 +220,18 @@ int main()
     TextElement GO_Option2H = createText(renderer, main_font2, "Zapisz swoj wynik", HUD_Color, WINDOW_HEIGHT / 4 + 425);
     TextElement GO_Option3H = createText(renderer, main_font2, "Powroc do menu", HUD_Color, WINDOW_HEIGHT / 4 + 525);
 
-    //MUZYKA
-    Mix_Music* gamebgm = Mix_LoadMUS("snake_main_music.mp3");
-    Mix_Music* menubgm = Mix_LoadMUS("snake_intro_theme.mp3");
-    Mix_Chunk* eatSound = Mix_LoadWAV("bite.ogg");
+   //MUZYKA
+    Mix_Music* gamebgm = Mix_LoadMUS("assets/snake_main_music.mp3");
+    Mix_Music* menubgm = Mix_LoadMUS("assets/snake_intro_theme.mp3");
+    Mix_Chunk* eatSound = Mix_LoadWAV("assets/bite.ogg");
 
     //GRAFIKA
-    SDL_Texture* artifactTexture1 = IMG_LoadTexture(renderer, "graphic_assets/artf1.png");
-    SDL_Texture* artifactTexture2 = IMG_LoadTexture(renderer, "graphic_assets/artf2.png");
-    SDL_Texture* artifactTexture3 = IMG_LoadTexture(renderer, "graphic_assets/artf3.png");
-    SDL_Texture* artifactTexture4 = IMG_LoadTexture(renderer, "graphic_assets/artf4.png");
-    SDL_Texture* artifactTexture5 = IMG_LoadTexture(renderer, "graphic_assets/artf5.png");
-    SDL_Texture* menuBackground = IMG_LoadTexture(renderer, "graphic_assets/bgmenu.png");
+    SDL_Texture* artifactTexture1 = IMG_LoadTexture(renderer, "assets/artf1.png");
+    SDL_Texture* artifactTexture2 = IMG_LoadTexture(renderer, "assets/artf2.png");
+    SDL_Texture* artifactTexture3 = IMG_LoadTexture(renderer, "assets/artf3.png");
+    SDL_Texture* artifactTexture4 = IMG_LoadTexture(renderer, "assets/artf4.png");
+    SDL_Texture* artifactTexture5 = IMG_LoadTexture(renderer, "assets/artf5.png");
+    SDL_Texture* menuBackground = IMG_LoadTexture(renderer, "assets/bgmenu.png");
 
     SDL_Rect bgRect;
     bgRect.x = 0;             
@@ -600,3 +600,4 @@ int main()
 
     return 0;
 }
+
