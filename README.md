@@ -21,11 +21,11 @@
 - Podstawowa mechanika Game Over (wylaczanie gry oraz restart spacja) i nazwanie stanów gry;
 - Wyswietlanie wyniku w trakcie gry;
 - Brak Game Over przy cofaniu.
-## Marta Lipień
+## Marta Lipień (marmaglip)
 - Podstawowe ciało gry;
 - Czuwanie nad fabułą i assetami gry;
 - Przygotowanie kolorów snake'a i modulu ich zmiany wraz z wyodrebnieniem koloru glowy.
-## Aleksandra Woźniak
+## Aleksandra Woźniak (Isahaoth)
 - Obsluga błędów;
 - Udźwiękowienie programu;
 - Praca nad Leaderboardem - wyniki, zapis;
