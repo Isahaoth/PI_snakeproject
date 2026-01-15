@@ -5,6 +5,7 @@
 2. Uruchom projekt - IndianaSnake_Official;
 3. Upewnij się, że umieściłeś folder z assetami w folderze projektu.
 4. Uruchom projekt poprzez wciśnięcie F5.
+   
 **Jeśli nie posiadasz wymaganych bibliotek:**
 1. Pobierz program Git;
 2. Otwórz wiersz poleceń. W głównym katalogu dysku uruchom komendę: `git clone https://github.com/microsoft/vcpkg`;
