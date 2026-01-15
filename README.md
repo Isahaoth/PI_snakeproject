@@ -9,9 +9,9 @@
 **Jeśli nie posiadasz wymaganych bibliotek:**
 1. Pobierz program Git;
 2. Otwórz wiersz poleceń. W głównym katalogu dysku uruchom komendę: `git clone https://github.com/microsoft/vcpkg`;
-3. Wejdź do folderu i uruchom .\bootstrap-vcpkg.bat;
-4. Wpisz .\vcpkg integrate install, aby nie musieć ustawiać nic w Visual Studio - program sam zauważy doinstalowane biblioteki;
-5. Wpisz .\vcpkg install sdl2 sdl2-image sdl2-mixer sdl2-ttf --triplet=x64-windows
+3. Wejdź do folderu i uruchom `.\bootstrap-vcpkg.bat`;
+4. Wpisz `.\vcpkg integrate install`, aby nie musieć ustawiać nic w Visual Studio - program sam zauważy doinstalowane biblioteki;
+5. Wpisz `.\vcpkg install sdl2 sdl2-image sdl2-mixer sdl2-ttf --triplet=x64-windows`;
 6. Odpal projekt, umieść assety i kliknij F5.
 
 # Twórcy projektu
