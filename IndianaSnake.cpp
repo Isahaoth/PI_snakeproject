@@ -17,7 +17,6 @@ using namespace std;
 int WINDOW_WIDTH = 1920;
 int WINDOW_HEIGHT = 1080;
 
-int ART_NUM = 65; //ilosc artefaktow
 int score;
 
 struct Player
@@ -713,6 +712,7 @@ txt.clean();
 
     return 0;
 }
+
 
 
 
